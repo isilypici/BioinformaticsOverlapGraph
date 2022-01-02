@@ -1,2 +1,2 @@
-# BioinformaticsOverlapGraph
-Overlaph Graph Implementation in Bioinformatics
+# Bioinformatics Overlap Graph Implementation
+Overlaph Graph Implementation 
