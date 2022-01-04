@@ -1,10 +1,22 @@
 import networkx as nx
 
-G = nx.Graph()
-G.add_edge('A','B',weight = 4)
-G.add_edge('B', 'D', weight=2)
-G.add_edge('A', 'C', weight=3)
-G.add_edge('C', 'D', weight=4)
-output = nx.shortest_path(G, 'A', 'D', weight='weight')
+def compare(kmer1,kmer2):
+    
+    G = nx.Graph()
+    
+    suffix = kmer1[1:]
+    prefix = kmer2[:-1]
+    
+    print("prefix:", prefix, "suffix:", suffix)
+    
+    if(prefix == suffix):
+        G.add_edge(kmer1,kmer2,weight = len(suffix))
+        
+    return G
+
+compare("tgtgtc","gtgtca")
+
+
+output = nx.shortest_path(compare("tgtgtc","gtgtca"), weight='weight')
 
 print(output)
