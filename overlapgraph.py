@@ -1,24 +1,47 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import random
 
 def compare(kmer1,kmer2, G):
     
     suffix = kmer1[1:]
     prefix = kmer2[:-1]
     
-    print("                 suffix:", suffix, "prefix:", prefix)
+    print("\t\tsuffix:", suffix, "prefix:", prefix)
     
     if(prefix == suffix):
-        print("                                                +")
+        print("\t\t\t\t\t\t\t\t\t+")
         G.add_edge(kmer1,kmer2,weight = len(suffix))
         
     return G
 
 def reconstruct(G):
-    print(list(G.edges))
-    
-    
-    
+    nodes = list(G)
+    edges = list(G.edges)
+    newGenome = []
+    #print(len(nodes))
+    #print(len(edges))
+    choosenNode = -1
+    counter = 0
+    while counter < len(nodes):
+        if (choosenNode != -1):
+            randomStartNode = nodes.index(choosenNode)
+        else:
+            randomStartNode = random.randint(0,len(nodes)-1)
+        
+        #biggestEdge = random.randint(0,len(edges[randomStartNode])-1)
+        print(randomStartNode, " ", edges[randomStartNode], " >> ", edges[randomStartNode][1])
+        choosenNode = edges[randomStartNode][1]
+        print(nodes.index(choosenNode) , " noduna geçildi...")
+        
+        newGenome.append(choosenNode)
+        print(newGenome)
+        
+        counter += 1
+        
+
+
+
 genomes = ["gtacgt","tacgta","acgtac","cgtacg","gtacga","tacgat"]
 temp = genomes.copy()
 G = nx.DiGraph()
@@ -34,7 +57,7 @@ while len(temp)>0:
             j+=1
             continue
         else:
-            print("    ",kmer1,"-->",kmer2)
+            print("\t",kmer1,"-->",kmer2)
             compare(kmer1 ,kmer2 , G)
             j+=1
     
