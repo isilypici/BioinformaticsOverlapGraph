@@ -2,22 +2,21 @@ import networkx as nx
 import matplotlib.pyplot as plt #grafiği görsel olarak da göstermek için 
 import random #TODO kaldırılabilir belli değil
 
-def compare(kmer1,kmer2, G): 
+def getSimilarity(read1,read2,threshold=4): 
+    """
+    read1, main read to be compared
+    read2 other read to be compared
+    returns same bases count suffix of read1 and prefix o read2
+    """
+    for i in range(len(read1)):
+        if(len(read1)-i < threshold):
+            return 0
+        isSame = read1[i:] == read2[:len(read2)-i] 
+        if(isSame):
+            return len(read1)-i
+    return 0
+        
     
-    #difference = #difference büyüdükçe benzerlik azalacak 
-    suffix = kmer1[1:]
-    prefix = kmer2[:-1] 
-    #TODO kaç adet suffix prefix eşleşmesi varsa o weight olmalı weight de bu sayı olmalı
-    #o kadar sayı kadar geriden başlamalı
-    
-    if(prefix == suffix):
-        print("\t\tsuffix:", suffix, "prefix:", prefix , " + ")
-        G.add_edge(kmer1,kmer2,weight = len(suffix)) 
-        #TODO weight ayarlanmalı
-    else:
-        print("\t\tsuffix:", suffix, "prefix:", prefix)
-    return G
-
 def reconstruct(G):
     nodes = list(G) #listede nodları tuttuk
     edges = list(G.edges) #listede edgeleri tuttuk 0. gelen 1. gittiği nod
@@ -45,12 +44,31 @@ def reconstruct(G):
 
 
 genomes = ["gtacgt","tacgta","acgtac","cgtacg","gtacga","tacgat"]
-temp = genomes.copy()
+
 G = nx.DiGraph()
+G.add_nodes_from(genomes)
+
+
+
+for _read1 in range(len(genomes)):
+    read1 = genomes[_read1]
+    rest = genomes.copy()
+    rest.remove(read1)
+    
+    for read2 in rest:
+        sim = getSimilarity(read1,read2)
+        if(sim>0):
+            print(sim ," ", read1," -> ",read2)
+            G.add_weighted_edges_from([(read1,read2,sim)])
+        
+        
+"""
+
+temp = genomes.copy()
 
 while len(temp)>0:
     kmer1 = temp[0]
-    print("işlenen:",kmer1)
+#    print("işlenen:",kmer1)
     
     j = 0
     while j<len(genomes):
@@ -59,17 +77,31 @@ while len(temp)>0:
             j+=1
             continue
         else:
-            print("\t",kmer1,"-->",kmer2) #diğer tüm kmer gnomeları karşılaştırarak node ve edge oluşturuyoruz
-            compare(kmer1 ,kmer2 , G)
+#            print("\t",kmer1,"-->",kmer2) #diğer tüm kmer gnomeları karşılaştırarak node ve edge oluşturuyoruz
+            getSimilarity(kmer1 ,kmer2)
             j+=1
     
     
     temp.pop(0) #işlenmiş elemanı çıkartıyoruz 
-    
-reconstruct(G)
+"""
+#reconstruct(G)
 
 #output = nx.shortest_path(compare("tgtgtc","gtgtca"), weight='weight') #2 nod araasında en kısa yolu bulmak için bir fonksiyon (kullanılmadı)
 
 #subax1 = plt.subplot(121)
 
 nx.draw(G, pos=nx.circular_layout(G), node_color='r', edge_color='b')
+nx.draw_networkx_edge_labels(G,pos=nx.circular_layout(G))
+
+
+
+
+
+
+
+
+
+
+
+
+
