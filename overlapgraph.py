@@ -55,31 +55,35 @@ class GenomeProject:
     def traversal(self,read):
         nodeNames = []
         weights = []
-        for i in [i for i in list(self.G.adjacency()) if i[0] == read ]:
-            for nodeName,val in i[1].items():
-                if(nodeName in self.traveledNodes):
-                    continue
-                nodeNames.append(nodeName)
-                for _w,weight in val.items():
-                    weights.append(weight)
-
-        allList = list(zip(nodeNames,weights))
-        
-        mostWeight = 0
-        mostWeightNode = None
-        
-        for edges in allList:
+        while True:
+            for i in [i for i in list(self.G.adjacency()) if i[0] == read ]:
+                for nodeName,val in i[1].items():
+                    if(nodeName in self.traveledNodes):
+                        continue
+                    nodeNames.append(nodeName)
+                    for _w,weight in val.items():
+                        weights.append(weight)
+    
+            allList = list(zip(nodeNames,weights))
             
-            if(edges[1] > mostWeight):
-                mostWeightNode = edges[0]
-                mostWeight = edges[1]
-        
-        if(mostWeightNode == None):
-            return
-        
-        self.traveledNodes.append(mostWeightNode)
-        self.path.append(mostWeightNode)
-        self.traversal(mostWeightNode)
+            mostWeight = 0
+            mostWeightNode = None
+            
+            for edges in allList:
+                
+                if(edges[1] > mostWeight):
+                    mostWeightNode = edges[0]
+                    mostWeight = edges[1]
+            
+            if(mostWeightNode == None):
+                return
+            
+            self.traveledNodes.append(mostWeightNode)
+            self.path.append(mostWeightNode)
+            read = mostWeightNode
+            nodeNames = []
+            weights = []
+#        self.traversal(mostWeightNode)
 
     def concatenate(self):
         self.gene = self.startingNode
