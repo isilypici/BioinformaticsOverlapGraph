@@ -17,31 +17,7 @@ def getSimilarity(read1,read2,threshold=40):
             return len(read1)-i
     return 0
         
-    
-def reconstruct(G):
-    nodes = list(G) #listede nodları tuttuk
-    edges = list(G.edges) #listede edgeleri tuttuk 0. gelen 1. gittiği nod
-    newGenome = [] 
-    #print(len(nodes))
-    #print(len(edges))
-    choosenNode = -1 #rastgele sayı önemsiz
-    counter = 0
-    while counter < len(nodes): #bütün nodları gezerse gezdikten sonra devam etmesine gerek yok
-        if (choosenNode != -1):
-            randomStartNode = nodes.index(choosenNode)
-        else:
-            randomStartNode = random.randint(0,len(nodes)-1)
-        
-        #biggestEdge = random.randint(0,len(edges[randomStartNode])-1)
-        print(randomStartNode, " ", edges[randomStartNode], " >> ", edges[randomStartNode][1])
-        choosenNode = edges[randomStartNode][1]
-        print(nodes.index(choosenNode) , " noduna geçildi...")
-        
-        newGenome.append(choosenNode)
-        print(newGenome)
-        
-        counter += 1
-        
+
 
 class GenomeProject:
     def __init__(self,genomeArray):
@@ -129,9 +105,8 @@ class geneSep:
         self.createReads()
         
     def createReads(self):
-        for i in range(len(self.text)-self.kmer):
+        for i in range(len(self.text)-self.kmer+1):
             self.reads.append(self.text[i:i+self.kmer])
-        print("len of reads:",len(self.reads))
     def isTextSame(self,txt):
         if(self.text == txt):
             return True
@@ -142,66 +117,19 @@ class geneSep:
 #readList = ["gtacgt","tacgta","acgtac","cgtacg","gtacga","tacgat"]
 #GenomeProject(readList)
 
-#for i in range(300,30000,500):
     
 start = time.time()
 
-rd = geneSep(50)
-print("gene sep")
+rd = geneSep(50,300)
 
 gp = GenomeProject(rd.reads)
-print("genome project")
 
 print(rd.isTextSame(gp.gene))
-print("check txt")
    
 end = time.time()
-print(end - start)
+print("  time:",end - start)
 
 
-
-#reconstruct
-
-
-
-
-
-
-
-
-
-"""
-
-temp = genomes.copy()
-
-while len(temp)>0:
-    kmer1 = temp[0]
-#    print("işlenen:",kmer1)
-    
-    j = 0
-    while j<len(genomes):
-        kmer2 = genomes[j]
-        if(kmer1 == kmer2): #kendi kendini kontrol etmesin diye kendisini geçiyoruz 
-            j+=1
-            continue
-        else:
-#            print("\t",kmer1,"-->",kmer2) #diğer tüm kmer gnomeları karşılaştırarak node ve edge oluşturuyoruz
-            getSimilarity(kmer1 ,kmer2)
-            j+=1
-    
-    
-    temp.pop(0) #işlenmiş elemanı çıkartıyoruz 
-"""
-
-
-#reconstruct(G)
-
-#output = nx.shortest_path(compare("tgtgtc","gtgtca"), weight='weight') #2 nod araasında en kısa yolu bulmak için bir fonksiyon (kullanılmadı)
-
-#subax1 = plt.subplot(121)
-
-#nx.draw(G, pos=nx.circular_layout(G), node_color='r', edge_color='b')
-#nx.draw_networkx_edge_labels(G,pos=nx.circular_layout(G))
 
 
 
