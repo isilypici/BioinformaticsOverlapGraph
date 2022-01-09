@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt #grafiği görsel olarak da göstermek için 
-import random #TODO kaldırılabilir belli değil
 import time
 
 def getSimilarity(read1,read2,threshold=40): 
@@ -117,8 +116,8 @@ class geneSep:
 #readList = ["gtacgt","tacgta","acgtac","cgtacg","gtacga","tacgat"]
 #GenomeProject(readList)
 
-    
-for i in range(300,3000,100):
+times = []
+for i in range(300,2000,50):
     start = time.time()
     
     rd = geneSep(50,i)
@@ -128,9 +127,13 @@ for i in range(300,3000,100):
     print(rd.isTextSame(gp.gene))
        
     end = time.time()
-    print("  time:",end - start)
+    print(i, end - start)
+    times.append(end-start)
 
+x = range(300,2000,50)
 
+plt.plot(x,times)
+plt.show()
 
 
 
