@@ -24,12 +24,18 @@ In the Overlap Layout graph method, the hamiltonian path is used. In the Hamilto
 
 ## Method Evaluation
 
-There are two methods which are de bruijn graph and overlap graph to read a DNA. Overlap Graph have advantages and disadvantages. 
+There are two methods which are de bruijn graph and overlap graph to read a DNA. Overlap Graph have disadvantages compared to other graph path algorithms. It becomes more complicated with larger k-mers and also larger data sets. That means it becomes more complex with big data.
+
+## Complexity and Speed
+
+### //TODO
+
+
 
  
  [^1]: [Networkx](https://networkx.org/documentation/stable/index.html)
  [^2]: [Reference](https://www.graphclasses.org/classes/gc_913.html)
 
-### TODO ###
+
 
 
