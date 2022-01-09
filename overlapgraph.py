@@ -1,8 +1,9 @@
 import networkx as nx
 import matplotlib.pyplot as plt #grafiği görsel olarak da göstermek için 
 import random #TODO kaldırılabilir belli değil
+import time
 
-def getSimilarity(read1,read2,threshold=4): 
+def getSimilarity(read1,read2,threshold=40): 
     """
     read1, main read to be compared
     read2 other read to be compared
@@ -42,26 +43,133 @@ def reconstruct(G):
         counter += 1
         
 
+class GenomeProject:
+    def __init__(self,genomeArray):
+        self.reads = genomeArray
+        
+        self.startingNode = genomeArray[0]#first node is starting node
+        self.traveledNodes = [self.startingNode]
+        
+        
+        self.G = nx.DiGraph()#initilize graph
+        self.G.add_nodes_from(self.reads)#add nodes from array
+        
+        
+        self.drawGraph()
+        self.assembleGenome()
+        
+        
+    def drawGraph(self):
+        for _read1 in range(len(self.reads)):
+            read1 = self.reads[_read1]
+            rest = self.reads.copy()
+            rest.remove(read1)
+        
+            for read2 in rest:
+                sim = getSimilarity(read1,read2)
+                if(sim>0):
+                    self.G.add_weighted_edges_from([(read1,read2,sim)])
+                    
+                    
+    def assembleGenome(self):
+        self.path = [self.startingNode]
+        
+        self.traversal(self.startingNode)
+        self.concatenate()
+            
+    def traversal(self,read):
+        nodeNames = []
+        weights = []
+        for i in [i for i in list(self.G.adjacency()) if i[0] == read ]:
+            for nodeName,val in i[1].items():
+                if(nodeName in self.traveledNodes):
+                    continue
+                nodeNames.append(nodeName)
+                for _w,weight in val.items():
+                    weights.append(weight)
 
-genomes = ["gtacgt","tacgta","acgtac","cgtacg","gtacga","tacgat"]
+        allList = list(zip(nodeNames,weights))
+        
+        mostWeight = 0
+        mostWeightNode = None
+        
+        for edges in allList:
+            
+            if(edges[1] > mostWeight):
+                mostWeightNode = edges[0]
+                mostWeight = edges[1]
+        
+        if(mostWeightNode == None):
+            return
+        
+        self.traveledNodes.append(mostWeightNode)
+        self.path.append(mostWeightNode)
+        self.traversal(mostWeightNode)
 
-G = nx.DiGraph()
-G.add_nodes_from(genomes)
+    def concatenate(self):
+        self.gene = self.startingNode
+        for i in self.path[1:]:
+            self.gene += i[-1]
+            
 
+class geneSep:
+    def __init__(self,kmer,length=None):
+        self.kmer = kmer
+        self.reads = []
+        with open("gene.fna") as f:
+            lines = f.readlines()
+            for i in lines.copy():
+                if(">" in i):
+                    lines.remove(i)
+            
+            self.text = "".join(lines).replace("\n","")
+            if(length != None):
+                self.text = self.text[0:length]
+            
+        self.createReads()
+        
+    def createReads(self):
+        for i in range(len(self.text)-self.kmer):
+            self.reads.append(self.text[i:i+self.kmer])
+        print("len of reads:",len(self.reads))
+    def isTextSame(self,txt):
+        if(self.text == txt):
+            return True
+        else:
+            return False
+            
 
+#readList = ["gtacgt","tacgta","acgtac","cgtacg","gtacga","tacgat"]
+#GenomeProject(readList)
 
-for _read1 in range(len(genomes)):
-    read1 = genomes[_read1]
-    rest = genomes.copy()
-    rest.remove(read1)
+#for i in range(300,30000,500):
     
-    for read2 in rest:
-        sim = getSimilarity(read1,read2)
-        if(sim>0):
-            print(sim ," ", read1," -> ",read2)
-            G.add_weighted_edges_from([(read1,read2,sim)])
-        
-        
+start = time.time()
+
+rd = geneSep(50)
+print("gene sep")
+
+gp = GenomeProject(rd.reads)
+print("genome project")
+
+print(rd.isTextSame(gp.gene))
+print("check txt")
+   
+end = time.time()
+print(end - start)
+
+
+
+#reconstruct
+
+
+
+
+
+
+
+
+
 """
 
 temp = genomes.copy()
@@ -84,14 +192,16 @@ while len(temp)>0:
     
     temp.pop(0) #işlenmiş elemanı çıkartıyoruz 
 """
+
+
 #reconstruct(G)
 
 #output = nx.shortest_path(compare("tgtgtc","gtgtca"), weight='weight') #2 nod araasında en kısa yolu bulmak için bir fonksiyon (kullanılmadı)
 
 #subax1 = plt.subplot(121)
 
-nx.draw(G, pos=nx.circular_layout(G), node_color='r', edge_color='b')
-nx.draw_networkx_edge_labels(G,pos=nx.circular_layout(G))
+#nx.draw(G, pos=nx.circular_layout(G), node_color='r', edge_color='b')
+#nx.draw_networkx_edge_labels(G,pos=nx.circular_layout(G))
 
 
 
