@@ -28,8 +28,7 @@ There are two methods which are de bruijn graph and overlap graph to read a DNA.
 
 ## Complexity and Speed
 
-### //TODO
-
+![Speed of the implementation as shown in the graph.](https://github.com/isilypici/BioinformaticsOverlapGraph/blob/main/speedimage.jpeg)
 
 
  
