@@ -118,16 +118,17 @@ class geneSep:
 #GenomeProject(readList)
 
     
-start = time.time()
-
-rd = geneSep(50,300)
-
-gp = GenomeProject(rd.reads)
-
-print(rd.isTextSame(gp.gene))
-   
-end = time.time()
-print("  time:",end - start)
+for i in range(300,3000,100):
+    start = time.time()
+    
+    rd = geneSep(50,i)
+    
+    gp = GenomeProject(rd.reads)
+    
+    print(rd.isTextSame(gp.gene))
+       
+    end = time.time()
+    print("  time:",end - start)
 
 
 
