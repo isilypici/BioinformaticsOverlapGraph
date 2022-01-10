@@ -1,5 +1,5 @@
 import networkx as nx
-import matplotlib.pyplot as plt #grafiği görsel olarak da göstermek için 
+import matplotlib.pyplot as plt
 import time
 
 def getSimilarity(read1,read2,threshold=40): 
@@ -19,7 +19,8 @@ def getSimilarity(read1,read2,threshold=40):
 
 
 class GenomeProject:
-    def __init__(self,genomeArray):
+    def __init__(self,genomeArray,threshold=40):
+        self.threshold = threshold
         self.reads = genomeArray
         
         self.startingNode = genomeArray[0]#first node is starting node
@@ -41,7 +42,7 @@ class GenomeProject:
             rest.remove(read1)
         
             for read2 in rest:
-                sim = getSimilarity(read1,read2)
+                sim = getSimilarity(read1,read2,self.threshold)
                 if(sim>0):
                     self.G.add_weighted_edges_from([(read1,read2,sim)])
                     
@@ -121,27 +122,28 @@ class geneSep:
 #GenomeProject(readList)
 
 times = []
-for i in range(300,2000,50):
-    start = time.time()
+x = range(1500,1550,50)
+for i in x:
+    for kmer in range(40,51):
+        start = time.time()
+        
+        rd = geneSep(kmer,i)
+        
+        gp = GenomeProject(rd.reads)
+        
+        
+           
+        end = time.time()
+        print(i, end - start,kmer, rd.isTextSame(gp.gene))
+        times.append(end-start)
     
-    rd = geneSep(50,i)
-    
-    gp = GenomeProject(rd.reads)
-    
-    print(rd.isTextSame(gp.gene))
-       
-    end = time.time()
-    print(i, end - start)
-    times.append(end-start)
+#    print(gp.gene)  #concatenated gene
 
-x = range(300,2000,50)
+
+
 
 plt.plot(x,times)
 plt.show()
-
-
-
-
 
 
 
